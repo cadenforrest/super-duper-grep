@@ -1,3 +1,3 @@
 # Challenge: implement common UNIX CLI utilities in Rust
 
-- Grep
+- do grep-like things

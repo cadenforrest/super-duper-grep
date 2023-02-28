@@ -1,5 +1,6 @@
 use anyhow::Result;
 use clap::Parser;
+use colored::Colorize;
 use std::fs;
 use std::path::{Path, PathBuf};
 use walkdir::WalkDir;
@@ -40,7 +41,12 @@ fn grep_file(path: &Path, pattern: &Path) -> Result<()> {
             .to_lowercase()
             .contains(&pattern.to_string_lossy().to_lowercase())
         {
-            println!("[{}]:{} - {}", path.display(), line_number + 1, line.trim());
+            println!("{}", path.display().to_string().green());
+            println!(
+                "{}:{}",
+                (line_number + 1).to_string().cyan(),
+                line.trim().white(),
+            );
         }
     }
     Ok(())
