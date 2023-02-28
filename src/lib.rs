@@ -3,6 +3,7 @@ use colored::Colorize;
 use std::fs;
 use std::path::Path;
 
+// TODO: this probably shouldn't be concerned with printing things idk
 /// Matches content in a file, writes results to writer
 pub fn grep_file(path: &Path, pattern: &String, mut writer: impl std::io::Write) -> Result<()> {
     let content = match fs::read_to_string(path) {
