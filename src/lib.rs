@@ -8,7 +8,7 @@ use std::path::Path;
 pub fn grep_file(path: &Path, pattern: &String, mut writer: impl std::io::Write) -> Result<()> {
     let content = match fs::read_to_string(path) {
         Ok(content) => content,
-        Err(_) => return Ok(()), // skip if it's not UTF-8
+        Err(error) => return Err(error.into()), // skip if it's not UTF-8
     };
     for (line_number, line) in content.lines().enumerate() {
         if line.to_lowercase().contains(&pattern.to_lowercase()) {

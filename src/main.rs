@@ -1,6 +1,7 @@
 use anyhow::Result;
 use clap::Parser;
-use std::io::{self};
+use colored::Colorize;
+use std::io::{self, Write};
 use std::path::PathBuf;
 use superdupergrep::grep_file;
 use walkdir::WalkDir;
@@ -11,6 +12,9 @@ struct Cli {
     pattern: String,
     /// The path to the file or directory to search
     path: PathBuf,
+    /// Enable debug mode to print parse errors
+    #[clap(short, long)]
+    debug: bool,
 }
 
 fn main() -> Result<()> {
@@ -22,7 +26,15 @@ fn main() -> Result<()> {
         for entry in WalkDir::new(&args.path) {
             let entry = entry?;
             if entry.file_type().is_file() {
-                grep_file(&entry.path(), &args.pattern, &mut handle)?;
+                match grep_file(&entry.path(), &args.pattern, &mut handle) {
+                    Ok(_) => continue,
+                    Err(err) => {
+                        if args.debug {
+                            writeln!(handle, "Error parsing file: {}", err)?;
+                            writeln!(handle, "{}", &entry.path().display().to_string().red())?;
+                        }
+                    }
+                };
             }
         }
     } else {
